@@ -1,4 +1,5 @@
 class RestaurantsController < ApplicationController
+
   def index
     restaurants = Restaurant.all
     render json: RestaurantSerializer.new(restaurants, options).serialized_json
