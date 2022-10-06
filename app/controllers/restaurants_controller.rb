@@ -2,39 +2,29 @@ class RestaurantsController < ApplicationController
 
   def index
     restaurants = Restaurant.all
-    render json: RestaurantSerializer.new(restaurants, options).serialized_json
+    render json: restaurants, status: :ok
   end
   
   def show
     restaurant = Restaurant.find_by(slug: params[:slug])
-    render json: RestaurantSerializer.new(restaurant, options).serialized_json
+    render json: restaurant, status: :ok
   end
 
   def create
-    restaurant = Restaurant.new(restaurant_params)
-    if restaurant.save
-      render json: RestaurantSerializer.new(restaurant).serialized_json
-    else
-      render json: {error: restaurant.errors.messages}, status: 422
-    end
+    restaurant = Restaurant.create!(restaurant_params)
+    render json: restaurant, status: :created
   end
 
   def update
     restaurant = Restaurant.find_by(slug: params[:slug])
-    if restaurant.update(restaurant_params)
-      render json: RestaurantSerializer.new(restaurant, options).serialized_json
-    else
-      render json: {error: restaurant.errors.messages}, status: 422
-    end
+    restaurant.update!(restaurant_params)
+    render json: restaurant, status: :ok
   end
 
   def destroy
     restaurant = Restaurant.find_by(slug: params[:slug])
-    if restaurant.destroy
-      head :no_content
-    else
-      render json: {error: restaurant.errors.messages}, status: 422
-    end
+    restaurant.destroy
+    head :no_content
   end
 
   private

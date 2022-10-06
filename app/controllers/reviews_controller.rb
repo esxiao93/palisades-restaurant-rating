@@ -1,21 +1,14 @@
 class ReviewsController < ApplicationController
 
   def create
-    review = Review.new(review_params)
-    if review.save
-      render json: ReviewSerializer.new(review).serialized_json
-    else
-      render json: {error: review.errors.messages}, status: 422
-    end
+    review = Review.create!(review_params)
+    render json: petition, status: :created
   end
 
   def destroy
     review = Review.find(params[:id])
-    if review.destroy
-      head :no_content
-    else
-      render json: {error: review.errors.messages}, status: 422
-    end
+    review.destroy
+    head :no_content
   end
 
   private
