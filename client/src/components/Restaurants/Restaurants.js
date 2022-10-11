@@ -15,7 +15,7 @@ function Restaurants () {
     .catch(error => console.log(error))
   }, []);
 
-  console.log(restaurants)
+  // console.log(restaurants)
 
   const restaurantList = restaurants.map(restaurant => {
     return (

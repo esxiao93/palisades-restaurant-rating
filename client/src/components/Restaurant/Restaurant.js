@@ -1,12 +1,19 @@
 import React, { useState, useEffect} from 'react';
+// import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Header from './Header';
 import ReviewForm from './ReviewForm';
 import styled from 'styled-components';
 
-function Restaurant(props) {
-  const [restaurant, setRestaurant] = useState({})
-  const [review, setReview] = useState({})
+function Restaurant() {
+  const [restaurant, setRestaurant] = useState({
+    reviews: [{title:'', description:'', score: 0}]
+  })
+  const [reviews, setReviews] = useState([])
+  // const [review, setReview] = useState({title:'', description:'', score: 0})
+  // const [title, setTitle] = useState('')
+  // const [description, setDescription] = useState('')
+  // const [score, setScore] = useState(0)
   const {slug} = useParams()
   const [loaded, setLoaded] = useState(false)
 
@@ -21,20 +28,68 @@ function Restaurant(props) {
     .catch(error => console.log(error))
   }, [slug]);
 
-  console.log(restaurant)
+  console.log(reviews)
+
+  function handleForm(newReview) {
+    const newReviewArray = [...reviews, newReview]
+    setReviews(newReviewArray)
+  }
+
+  // const handleChange = (e) => {
+  //   e.preventDefault()
+  //   // console.log('name:', e.target.name, 'value:', e.target.value)
+  //   setReview(Object.assign({}, review, {[e.target.name]: e.target.value}))
+  // }
+
+// console.log(review)
+// console.log(restaurant)
+// console.log(restaurant.reviews)
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault()
+  //   const newReview = {
+  //     title: title,
+  //     description: description,
+  //     score: score,
+  //     restaurant_id: restaurant.id
+  //   }
+
+  //   fetch('/reviews', {
+  //     method: 'POST',
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(newReview)
+  //   })
+  //   .then(response => response.json())
+  //   .then(data => {
+  //     setReview([...review, data])
+  //   })
+  // }
+
+  // console.log(restaurant)
+  // console.log(review)
   return (
     <Wrapper>
-      <Column>
-        <Main>
-        {
-          loaded && <Header restaurant={restaurant} review={restaurant.included}/>
-        }
-        <div className="reviews"></div>
-        </Main>
-      </Column>
-      <Column>
-        <ReviewForm/>
-      </Column>
+       {
+      loaded &&
+      <>
+        <Column>
+          <Main>
+            <Header restaurant={restaurant} review={restaurant.included}/>
+            <div className="reviews"></div>
+          </Main>
+        </Column>
+        <Column>
+          <ReviewForm 
+            // handleChange={handleChange} 
+            // handleSubmit={handleSubmit} 
+            handleForm={handleForm}
+            restaurant={restaurant}
+          />
+        </Column> 
+      </>
+      }
     </Wrapper>
   )
 }
@@ -59,3 +114,27 @@ const Column = styled.div`
 const Main = styled.div`
   padding-left: 50px;
 `
+
+
+
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault()
+
+  //   const csrfToken = document.querySelector('[name=csrfToken]').content
+  //   axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken
+
+  //   const restaurant_id = restaurant.id
+  //   axios.post('/reviews', {review, restaurant_id})
+  //   .then(resp => {
+  //     const included = [...restaurant.included, resp.data]
+  //     setRestaurant({...restaurant, included})
+  //     setReview({title:'', description:'', score: 0})
+  //   })
+  //   .catch(resp => {})
+  // }
+
+  // const setRating = (score, e) => {
+  //   e.preventDefault()
+  //   setReview({...review, score})
+  // }
